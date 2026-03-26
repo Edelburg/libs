@@ -1,0 +1,64 @@
+# Tech Stack Policy — approved pool
+# Neue Dependencies NUR aus dieser Liste.
+# Ausnahmen: PR öffnen + Begründung + Review durch Lead.
+# CI blockiert automatisch alles was nicht hier steht.
+
+approved:
+
+  python:
+    versions: ["3.11", "3.12"]
+    web: [fastapi, uvicorn, pydantic, pydantic-settings, httpx]
+    db: [sqlalchemy, alembic, aiosqlite]
+    logging: [loguru, structlog]
+    data: [pandas, numpy, pyarrow]
+    ml: [scikit-learn]
+    testing: [pytest, hypothesis, pytest-asyncio, pytest-cov]
+    linting: [ruff, black, isort]
+    cli: [typer, rich]
+    crypto: [solana, solders, base58]
+    ocr: [surya-ocr, pdf2image, Pillow, opencv-python-headless]
+    ai: [anthropic, openai, httpx]
+
+  typescript:
+    runtime: [node ">=20"]
+    framework: [react, vite]
+    state: [zustand, "@tanstack/react-query"]
+    ui: [tailwindcss, "@heroicons/react", "@radix-ui/react-*"]
+    charts: [recharts]
+    desktop: ["@tauri-apps/api", "@tauri-apps/cli"]
+    http: [axios]
+    testing: [vitest, "@testing-library/react", playwright]
+    linting: [eslint, prettier, typescript]
+
+  infrastructure:
+    db: [sqlite, postgresql, redis]
+    container: [docker, docker-compose]
+    ci: [github-actions]
+
+forbidden:
+  python:
+    - flask          # → fastapi statt
+    - django         # → fastapi statt
+    - requests       # → httpx statt (async-first)
+    - urllib3        # → httpx statt
+    - pymongo        # nicht im approved DB-Pool
+    - celery         # → eigene async Lösungen
+
+  typescript:
+    - moment         # → date-fns oder native Intl
+    - jQuery         # kein DOM-Manipulation außerhalb Framework
+    - lodash         # → native JS oder einzelne Funktionen
+    - axios          # nur wenn nicht schon react-query/fetch ausreicht
+    - "@mui/material" # → Tailwind + Radix statt
+    - bootstrap      # → Tailwind statt
+
+process:
+  new_dependency:
+    - Prüfe zuerst catalog.yaml ob Funktion bereits existiert
+    - Wenn nein: prüfe ob approved list passt
+    - Wenn approved: direkt verwenden
+    - Wenn nicht approved: PR mit Begründung + 1 Review
+  new_lib:
+    - Mindestens 2 Apps müssen die Funktion brauchen
+    - Contract-Datei in libs/ anlegen bevor Implementierung
+    - catalog.yaml aktualisieren

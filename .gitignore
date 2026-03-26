@@ -1,0 +1,21 @@
+# Apps haben eigene Git-Repos — nur libs/ und Root-Configs tracken
+apps/
+claude-config/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db

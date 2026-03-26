@@ -1,0 +1,81 @@
+# Monorepo Catalog — maschinenlesbar für KI + CI
+# Vor dem Bauen: prüfe ob die benötigte Funktion hier bereits existiert.
+#
+# Format:
+#   id:          eindeutiger Bezeichner (namespace.name)
+#   path:        relativer Pfad ab Repo-Root
+#   provides:    Liste von Fähigkeiten (was findet man hier?)
+#   languages:   Programmiersprachen
+#   status:      stable | beta | planned
+#   used_by:     welche Apps nutzen das bereits
+
+libs:
+
+  - id: py.core
+    path: libs/python/core
+    provides:
+      - base-exception (AppError mit code + details)
+    languages: [python]
+    status: stable
+    used_by: []
+    note: >
+      HomeDeskError in apps/homedesk/backend/shared/exceptions.py
+      ist die aktuelle Implementierung — bei nächster Gelegenheit auf
+      AppError aus libs/python/core umstellen.
+
+  - id: py.pdf
+    path: libs/python/pdf
+    provides:
+      - pdf-export
+      - pdf-import
+      - ocr
+      - image-processing
+    languages: [python]
+    status: planned
+    used_by: []
+    note: >
+      PDF/OCR-Logik liegt aktuell in apps/homedesk/backend/services/ocr/.
+      Bei Bedarf in anderen Projekten hierher extrahieren.
+
+  - id: py.data
+    path: libs/python/data
+    provides:
+      - dataframe-utils
+      - timeseries
+      - technical-indicators
+    languages: [python]
+    status: planned
+    used_by: []
+    note: >
+      Pandas/numpy-Utilities liegen aktuell in apps/solbot/src/.
+      Bei Bedarf in anderen Projekten hierher extrahieren.
+
+  - id: ts.charts
+    path: libs/typescript/charts
+    provides:
+      - line-chart
+      - bar-chart
+      - candlestick-chart
+      - portfolio-chart
+    languages: [typescript]
+    status: planned
+    used_by: []
+    note: >
+      Recharts-Wrapper aktuell in apps/homedesk/src/components/charts/.
+      SolBot UI nutzt eigene Chart-Logik — bei Konvergenz hierher.
+
+apps:
+
+  - id: solbot
+    path: apps/solbot
+    description: Solana Trading Bot mit KI-gestützten Strategien
+    language: python
+    remote: https://github.com/Edelburg/SolBot.git
+    uses_libs: []
+
+  - id: homedesk
+    path: apps/homedesk
+    description: Persönliches Dokumenten-Management-System mit KI-Integration
+    language: python + typescript
+    remote: https://github.com/Edelburg/HomeDesk.git
+    uses_libs: []
